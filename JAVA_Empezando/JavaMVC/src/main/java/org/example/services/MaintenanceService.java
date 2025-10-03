@@ -18,14 +18,13 @@ public class MaintenanceService {
     // -------------------------
     // CREATE
     // -------------------------
-    public Maintenance createMaintenance(String make, String model, int year, Car owner) {
+    public Maintenance createMaintenance(Long ID,String Description, String Type, Car ownerCar) {
         try (Session session = sessionFactory.openSession()) {
             Transaction tx = session.beginTransaction();
 
             Maintenance maintenance = new Maintenance();
-            maintenance.setMake(make);
+            maintenance.setId(ID);
             maintenance.setModel(model);
-            maintenance.setYear(year);
             maintenance.setOwner(owner);
 
             session.persist(maintenance);
@@ -68,7 +67,6 @@ public class MaintenanceService {
             if (maintenance != null) {
                 maintenance.setMake(make);
                 maintenance.setModel(model);
-                maintenance.setYear(year);
                 session.merge(maintenance);
             }
 

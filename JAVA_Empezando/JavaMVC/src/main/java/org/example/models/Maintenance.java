@@ -10,16 +10,13 @@ import java.time.LocalDateTime;
 public class Maintenance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(nullable = false, length = 50)
     private String make;
 
     @Column(nullable = false, length = 50)
     private String model;
-
-    @Column(nullable = false)
-    private int year;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "maintenance", nullable = false, foreignKey = @ForeignKey(name = "fk_car_user"))
@@ -68,14 +65,6 @@ public class Maintenance {
 
     public void setModel(String model) {
         this.model = model;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
     }
 
     public Car getOwner() {
