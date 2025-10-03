@@ -20,7 +20,7 @@ public class Main {
         AuthService authService = new AuthService(HibernateUtil.getSessionFactory());
         AuthController authController = new AuthController(authService);
 
-        try {
+      try {
             User user = authController.register("johndoe", "john@example.com", "password123", "USER");
 
             // Create a car

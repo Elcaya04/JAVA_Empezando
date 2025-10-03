@@ -41,28 +41,16 @@ public class MaintenanceController {
      * @param id Maintenance ID
      * @return Maintenance object or null if not found
      */
-    public Maintenance getMaintenanceById(Long id) {
-        return maintenanceService.getMaintenanceById(id);
-    }
+   //return maintenanceService.updateMaintenance{maintenance.getId(), maintenance.getMake(), maintenance.getModel(), maintenance.getYear());
 
-    /**
-     * Update a Maintenance.
-     *
-     * @param maintenance Updated Maintenance object
-     * @return Updated Maintenance
-     */
-    public Maintenance updateMaintenance(Maintenance maintenance) {
-        return maintenanceService.updateMaintenance{maintenance.getId(), maintenance.getMake(), maintenance.getModel(), maintenance.getYear());
-    }
 
     /**
      * Delete a car by its ID.
      *
-     * @param id Car ID
+     * @param id Maintenance ID
      * @return true if deletion succeeded
      */
-    public boolean deleteMaintenance(Long id) {
-        return maintenanceService.deleteCar(id);
+    //public boolean deleteMaintenance(Long id) {
+       // return maintenanceService.deleteCar(id);
     }
 }
-    }}

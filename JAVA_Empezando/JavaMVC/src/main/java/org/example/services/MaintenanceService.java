@@ -24,8 +24,8 @@ public class MaintenanceService {
 
             Maintenance maintenance = new Maintenance();
             maintenance.setId(ID);
-            maintenance.setModel(model);
-            maintenance.setOwner(owner);
+            maintenance.setDescription(Description);
+            maintenance.setOwner(ownerCar);
 
             session.persist(maintenance);
             tx.commit();
@@ -59,7 +59,7 @@ public class MaintenanceService {
     // -------------------------
     // UPDATE
     // -------------------------
-    public Maintenance updateMaintenance(Long MaintainanceId, String make, String model, int year) {
+    public Maintenance updateMaintenance(Long MaintainanceId,String Description, String Type, Car ownerCar,String make,String model,String year) {
         try (Session session = sessionFactory.openSession()) {
             Transaction tx = session.beginTransaction();
 

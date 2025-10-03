@@ -17,6 +17,9 @@ public class Maintenance {
 
     @Column(nullable = false, length = 50)
     private String model;
+    @Column(nullable = false, length = 50)
+    private String Description;
+
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "maintenance", nullable = false, foreignKey = @ForeignKey(name = "fk_car_user"))
@@ -73,6 +76,12 @@ public class Maintenance {
 
     public void setOwner(Car owner) {
         this.owner = owner;
+    }
+    public String getDescription() {
+        return Description;
+    }
+    public void setDescription(String description) {
+        Description = description;
     }
 
     public LocalDateTime getCreatedAt() {
