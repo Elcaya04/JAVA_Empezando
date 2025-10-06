@@ -1,6 +1,7 @@
 package org.example.models;
 
 import jakarta.persistence.*;
+import org.example.utilities.MaintenanceType;
 
 import java.time.LocalDateTime;
 
@@ -10,20 +11,25 @@ import java.time.LocalDateTime;
 public class Maintenance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(nullable = false, length = 50)
-    private String make;
+    @Column(nullable = false, length = 255)
+    private String description;
 
-    @Column(nullable = false, length = 50)
-    private String model;
-    @Column(nullable = false, length = 50)
-    private String Description;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private MaintenanceType type;  // REPAIR, MOD, ROUTINE
 
+    @Column(name = "cost")
+    private Double cost;  // Opcional: costo del mantenimiento
 
+    @Column(name = "maintenance_date")
+    private LocalDateTime maintenanceDate;
+
+    // Relación ManyToOne con Car
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "maintenance", nullable = false, foreignKey = @ForeignKey(name = "fk_car_user"))
-    public Car owner;
+    @JoinColumn(name = "car_id", nullable = false, foreignKey = @ForeignKey(name = "fk_maintenance_car"))
+    private Car car;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -54,34 +60,44 @@ public class Maintenance {
         this.id = id;
     }
 
-    public String getMake() {
-        return make;
-    }
-
-    public void setMake(String make) {
-        this.make = make;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public Car getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Car owner) {
-        this.owner = owner;
-    }
     public String getDescription() {
-        return Description;
+        return description;
     }
+
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
+    }
+
+    public MaintenanceType getType() {
+        return type;
+    }
+
+    public void setType(MaintenanceType type) {
+        this.type = type;
+    }
+
+    public Double getCost() {
+        return cost;
+    }
+
+    public void setCost(Double cost) {
+        this.cost = cost;
+    }
+
+    public LocalDateTime getMaintenanceDate() {
+        return maintenanceDate;
+    }
+
+    public void setMaintenanceDate(LocalDateTime maintenanceDate) {
+        this.maintenanceDate = maintenanceDate;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
     }
 
     public LocalDateTime getCreatedAt() {

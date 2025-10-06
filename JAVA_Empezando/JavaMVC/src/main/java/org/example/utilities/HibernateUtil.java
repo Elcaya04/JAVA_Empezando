@@ -1,6 +1,7 @@
 package org.example.utilities;
 
 import org.example.models.Car;
+import org.example.models.Maintenance;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class HibernateUtil {
                     .addProperties(properties)
                     .addAnnotatedClass(User.class)
                     .addAnnotatedClass(Car.class)
-                    // Agregar aqui otras entidades.
+                    .addAnnotatedClass(Maintenance.class)
                     .buildSessionFactory();
 
         } catch (IOException e) {
