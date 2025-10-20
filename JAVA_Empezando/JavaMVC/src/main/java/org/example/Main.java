@@ -33,7 +33,7 @@ public class Main {
         MaintenanceController maintenanceController = new MaintenanceController(maintenanceService, carService);
 
         // Create test data
-        var createTestData = true;
+        var createTestData = false; // ← Cambia a true solo la primera vez
         if (createTestData) {
             System.out.println("\n========== Creating Test Data ==========");
 
