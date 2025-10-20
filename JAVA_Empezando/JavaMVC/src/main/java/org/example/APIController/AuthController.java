@@ -1,7 +1,7 @@
-package org.example.controller;
+package org.example.APIController;
 
-import org.example.models.User;
-import org.example.services.AuthService;
+import org.example.Domain.models.User;
+import org.example.DataAccess.services.AuthService;
 
 public class AuthController {
 

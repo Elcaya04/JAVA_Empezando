@@ -1,7 +1,7 @@
-package org.example.services;
+package org.example.DataAccess.services;
 
-import org.example.models.Car;
-import org.example.models.Maintenance;
+import org.example.Domain.models.Car;
+import org.example.Domain.models.Maintenance;
 
 import org.example.utilities.MaintenanceType;
 import org.hibernate.Session;

@@ -1,6 +1,6 @@
-package org.example.services;
+package org.example.DataAccess.services;
 
-import org.example.models.User;
+import org.example.Domain.models.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;

@@ -1,16 +1,15 @@
-package org.example.utilities;
+package org.example.DataAccess;
 
-import org.example.models.Car;
-import org.example.models.Maintenance;
+import org.example.Domain.models.Car;
+import org.example.Domain.models.Maintenance;
+import org.example.Domain.models.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+
 import java.io.IOException;
 import java.util.Properties;
 
-import org.example.models.User;
-
 public class HibernateUtil {
-
     private static final SessionFactory sessionFactory;
 
     static {
@@ -23,6 +22,7 @@ public class HibernateUtil {
                     .addAnnotatedClass(User.class)
                     .addAnnotatedClass(Car.class)
                     .addAnnotatedClass(Maintenance.class)
+                    // Agregar aqui otras entidades.
                     .buildSessionFactory();
 
         } catch (IOException e) {
