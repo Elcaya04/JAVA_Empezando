@@ -9,7 +9,7 @@ public class UpdateMaintenanceRequestDto {
     private String description;
     private MaintenanceType type;
     private Double cost;
-    private LocalDateTime maintenanceDate;
+    private LocalDateTime maintenanceDate; // ← Cambiado de String a LocalDateTime
 
     public UpdateMaintenanceRequestDto() {}
 
@@ -34,6 +34,6 @@ public class UpdateMaintenanceRequestDto {
     public Double getCost() { return cost; }
     public void setCost(Double cost) { this.cost = cost; }
 
-    public LocalDateTime getMaintenanceDate() { return maintenanceDate; }
+    public LocalDateTime getMaintenanceDate() { return maintenanceDate; } // ← Cambiado
     public void setMaintenanceDate(LocalDateTime maintenanceDate) { this.maintenanceDate = maintenanceDate; }
 }

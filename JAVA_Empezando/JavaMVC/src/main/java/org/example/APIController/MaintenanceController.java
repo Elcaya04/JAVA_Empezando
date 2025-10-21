@@ -1,6 +1,7 @@
 package org.example.APIController;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.example.DataAccess.services.CarService;
 import org.example.Domain.Dtos.Auth.UserResponseDto;
 import org.example.Domain.Dtos.Maintenance.*;
@@ -10,6 +11,7 @@ import org.example.Domain.Dtos.cars.CarResponseDto;
 import org.example.Domain.models.Car;
 import org.example.Domain.models.Maintenance;
 import org.example.DataAccess.services.MaintenanceService;
+import org.example.utilities.LocalDateTimeAdapter;
 import org.example.utilities.MaintenanceType;
 
 import java.time.LocalDateTime;
@@ -19,7 +21,9 @@ import java.util.stream.Collectors;
 public class MaintenanceController {
     private final MaintenanceService maintenanceService;
     private final CarService carService;
-    private final Gson gson = new Gson();
+    private final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .create();
 
     public MaintenanceController(MaintenanceService maintenanceService, CarService carService) {
         this.maintenanceService = maintenanceService;
