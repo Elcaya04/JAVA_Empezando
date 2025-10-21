@@ -224,13 +224,18 @@ public class MaintenanceController {
     // --- Helper method ---
     private MaintenanceResponseDto toResponseDto(Maintenance maintenance) {
         var car = maintenance.getCar();
-        var owner = new UserResponseDto(
-                car.getOwner().getId(),
-                car.getOwner().getUsername(),
-                car.getOwner().getEmail(),
-                car.getOwner().getRole(),
-                car.getOwner().getCreatedAt().toString(),
-                car.getOwner().getUpdatedAt().toString()
+
+        // Inicializar el owner dentro de la sesión (si es necesario)
+        var owner = car.getOwner();
+
+
+        var ownerDto = new UserResponseDto(
+                owner.getId(),
+                owner.getUsername(),
+                owner.getEmail(),
+                owner.getRole(),
+                owner.getCreatedAt().toString(),
+                owner.getUpdatedAt().toString()
         );
 
         var carDto = new CarResponseDto(
@@ -238,7 +243,7 @@ public class MaintenanceController {
                 car.getMake(),
                 car.getModel(),
                 car.getYear(),
-                owner,
+                ownerDto,
                 car.getCreatedAt().toString(),
                 car.getUpdatedAt().toString()
         );

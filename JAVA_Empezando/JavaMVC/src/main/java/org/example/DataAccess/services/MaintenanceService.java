@@ -4,6 +4,7 @@ import org.example.Domain.models.Car;
 import org.example.Domain.models.Maintenance;
 
 import org.example.utilities.MaintenanceType;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -24,7 +25,7 @@ public class MaintenanceService {
                                          LocalDateTime maintenanceDate, Car car) {
         try (Session session = sessionFactory.openSession()) {
             Transaction tx = session.beginTransaction();
-
+            Car managedCar = session.find(Car.class, car.getId());
             Maintenance maintenance = new Maintenance();
             maintenance.setDescription(description);
             maintenance.setType(type);
@@ -33,6 +34,7 @@ public class MaintenanceService {
             maintenance.setCar(car);
 
             session.persist(maintenance);
+            Hibernate.initialize(managedCar.getOwner());
             tx.commit();
             return maintenance;
         }
@@ -43,37 +45,58 @@ public class MaintenanceService {
     // -------------------------
     public Maintenance getMaintenanceById(Long id) {
         try (Session session = sessionFactory.openSession()) {
-            return session.find(Maintenance.class, id);
+            Maintenance maintenance = session.find(Maintenance.class, id);
+            if (maintenance != null) {
+                Hibernate.initialize(maintenance.getCar());
+                Hibernate.initialize(maintenance.getCar().getOwner());
+            }
+            return maintenance;
         }
     }
 
     public List<Maintenance> getAllMaintenances() {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM Maintenance", Maintenance.class).list();
-        }
-    }
-
-    public List<Maintenance> getMaintenancesByCar(Car car) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM Maintenance WHERE car = :car ORDER BY maintenanceDate DESC", Maintenance.class)
-                    .setParameter("car", car)
-                    .list();
+            List<Maintenance> maintenances = session.createQuery("FROM Maintenance", Maintenance.class).list();
+            // Inicializar las relaciones lazy
+            for (Maintenance m : maintenances) {
+                Hibernate.initialize(m.getCar());
+                Hibernate.initialize(m.getCar().getOwner());
+            }
+            return maintenances;
         }
     }
 
     public List<Maintenance> getMaintenancesByCarId(Long carId) {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM Maintenance m WHERE m.car.id = :carId ORDER BY m.maintenanceDate DESC", Maintenance.class)
+            List<Maintenance> maintenances = session.createQuery(
+                            "FROM Maintenance m WHERE m.car.id = :carId ORDER BY m.maintenanceDate DESC",
+                            Maintenance.class)
                     .setParameter("carId", carId)
                     .list();
+
+            // Inicializar las relaciones lazy
+            for (Maintenance m : maintenances) {
+                Hibernate.initialize(m.getCar());
+                Hibernate.initialize(m.getCar().getOwner());
+            }
+            return maintenances;
         }
     }
 
     public List<Maintenance> getMaintenancesByType(MaintenanceType type) {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM Maintenance WHERE type = :type", Maintenance.class)
+            List<Maintenance> maintenances = session.createQuery(
+                            "FROM Maintenance WHERE type = :type",
+                            Maintenance.class)
                     .setParameter("type", type)
                     .list();
+
+            // Inicializar las relaciones lazy
+            for (Maintenance m : maintenances) {
+                Hibernate.initialize(m.getCar());
+                Hibernate.initialize(m.getCar().getOwner());
+            }
+            return maintenances;
         }
     }
 
@@ -92,6 +115,10 @@ public class MaintenanceService {
                 maintenance.setCost(cost);
                 maintenance.setMaintenanceDate(maintenanceDate);
                 session.merge(maintenance);
+
+                // Inicializar las relaciones lazy antes de cerrar la sesión
+                Hibernate.initialize(maintenance.getCar());
+                Hibernate.initialize(maintenance.getCar().getOwner());
             }
 
             tx.commit();
