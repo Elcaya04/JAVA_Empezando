@@ -31,7 +31,7 @@ public class MaintenanceService {
             maintenance.setType(type);
             maintenance.setCost(cost);
             maintenance.setMaintenanceDate(maintenanceDate);
-            maintenance.setCar(car);
+            maintenance.setCar(managedCar);
 
             session.persist(maintenance);
             Hibernate.initialize(managedCar.getOwner());
@@ -65,7 +65,28 @@ public class MaintenanceService {
             return maintenances;
         }
     }
+    public List<Maintenance> getMaintenancesByUserId(Long userId) {
+        try (Session session = sessionFactory.openSession()) {
+            List<Maintenance> maintenances = session.createQuery(
+                            "FROM Maintenance m WHERE m.car.owner.id = :userId ORDER BY m.maintenanceDate DESC",
+                            Maintenance.class)
+                    .setParameter("userId", userId)
+                    .list();
 
+            // Inicializar las relaciones lazy
+            for (Maintenance m : maintenances) {
+                Hibernate.initialize(m.getCar());
+                Hibernate.initialize(m.getCar().getOwner());
+            }
+
+            return maintenances;
+        } catch (Exception e) {
+            String message = String.format("An error occurred when processing: %s. Details: %s",
+                    "getMaintenancesByUserId", e);
+            System.out.println(message);
+            throw e;
+        }
+    }
     public List<Maintenance> getMaintenancesByCarId(Long carId) {
         try (Session session = sessionFactory.openSession()) {
             List<Maintenance> maintenances = session.createQuery(

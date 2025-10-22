@@ -49,8 +49,16 @@ public class CarController {
                 return new ResponseDto(false, "Unauthorized", null);
             }
 
+            Long userId = Long.parseLong(request.getToken());
             AddCarRequestDto dto = gson.fromJson(request.getData(), AddCarRequestDto.class);
-            Car car = carService.createCar(dto.getMake(), dto.getModel(), dto.getYear(), dto.getOwnerId());
+
+
+            Car car = carService.createCar(
+                    dto.getMake(),
+                    dto.getModel(),
+                    dto.getYear(),
+                    userId
+            );
 
             CarResponseDto response = toResponseDto(car);
             return new ResponseDto(true, "Car added successfully", gson.toJson(response));
@@ -110,7 +118,12 @@ public class CarController {
                 return new ResponseDto(false, "Unauthorized", null);
             }
 
-            List<Car> cars = carService.getAllCars();
+            // ✅ CAMBIO: Obtener el userId del token
+            Long userId = Long.parseLong(request.getToken());
+
+            // ✅ CAMBIO: Obtener solo los carros del usuario actual
+            List<Car> cars = carService.getCarsByUserId(userId);
+
             List<CarResponseDto> carDtos = cars.stream()
                     .map(this::toResponseDto)
                     .collect(Collectors.toList());

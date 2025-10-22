@@ -141,8 +141,9 @@ public class MaintenanceController {
             if (request.getToken() == null || request.getToken().isEmpty()) {
                 return new ResponseDto(false, "Unauthorized", null);
             }
+            Long userId = Long.parseLong(request.getToken());
+            List<Maintenance> maintenances = maintenanceService.getMaintenancesByUserId(userId);
 
-            List<Maintenance> maintenances = maintenanceService.getAllMaintenances();
             List<MaintenanceResponseDto> maintenanceDtos = maintenances.stream()
                     .map(this::toResponseDto)
                     .collect(Collectors.toList());

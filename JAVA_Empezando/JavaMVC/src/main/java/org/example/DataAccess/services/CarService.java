@@ -21,9 +21,12 @@ public class CarService {
     // -------------------------
     public Car createCar(String make, String model, int year, Long ownerId) {
         try (Session session = sessionFactory.openSession()) {
-            var owner = session.find(User.class, ownerId);
-            Transaction tx = session.beginTransaction();
 
+            Transaction tx = session.beginTransaction();
+            User owner = session.find(User.class, ownerId);
+            if (owner == null) {
+                throw new IllegalArgumentException("Owner not found with id: " + ownerId);
+            }
             Car car = new Car();
             car.setMake(make);
             car.setModel(model);
@@ -31,6 +34,7 @@ public class CarService {
             car.setOwner(owner);
 
             session.persist(car);
+            Hibernate.initialize(owner);
             tx.commit();
             return car;
         } catch (Exception e) {
@@ -65,10 +69,10 @@ public class CarService {
         }
     }
 
-    public List<Car> getCarsByUser(User user) {
+    public List<Car> getCarsByUserId(long userId) {
         try (Session session = sessionFactory.openSession()) {
-            List<Car> cars = session.createQuery("FROM Car WHERE owner = :owner", Car.class)
-                    .setParameter("owner", user)
+            List<Car> cars = session.createQuery("FROM Car WHERE owner.id = :userId", Car.class)
+                    .setParameter("userId", userId)
                     .list();
             cars.forEach(car -> Hibernate.initialize(car.getOwner())); // Incluir tambien al dueno
             return cars;
