@@ -1,5 +1,6 @@
 package org.example.APIController;
 
+import basecontroller.IBaseController;
 import com.google.gson.Gson;
 import org.example.Domain.Dtos.Auth.LoginRequestDto;
 import org.example.Domain.Dtos.Auth.RegisterRequestDto;
@@ -9,7 +10,7 @@ import org.example.Domain.Dtos.ResponseDto;
 import org.example.Domain.models.User;
 import org.example.DataAccess.services.AuthService;
 
-public class AuthController {
+public class AuthController implements IBaseController<ResponseDto,RequestDto> {
 
     private final AuthService authService;
     private final Gson gson = new Gson();
@@ -18,7 +19,13 @@ public class AuthController {
         this.authService = authService;
     }
 
+    @Override
+    public String getControllerName() {
+        return "Auth";
+    }
+
     // Single routing entry point for the handler
+    @Override
     public ResponseDto route(RequestDto request) {
         try {
             switch (request.getRequest()) {

@@ -1,16 +1,17 @@
 package org.example;
 
+import com.google.gson.Gson;
 import org.example.APIController.AuthController;
 import org.example.APIController.CarController;
 import org.example.APIController.MaintenanceController;
 import org.example.DataAccess.HibernateUtil;
 import org.example.DataAccess.services.MaintenanceService;
+import org.example.Domain.Dtos.RequestDto;
 import org.example.Domain.models.Car;
 import org.example.Domain.models.User;
 import org.example.DataAccess.services.AuthService;
 import org.example.DataAccess.services.CarService;
-import org.example.Server.MessageBroadcaster;
-import org.example.Server.SocketServer;
+import org.example.Server.AppServer;
 import org.example.utilities.MaintenanceType;
 
 import java.time.LocalDateTime;
@@ -36,37 +37,23 @@ public class Main {
         initializeTestDataIfNeeded(authService, carService, maintenanceService);
 
         // Server for request/response (API-like)
-        int requestPort = 7000;
-        SocketServer requestServer = new SocketServer(
-                requestPort,
-                authController,
-                carController,
-                maintenanceController);
-
-        // Server for chat/broadcasting (persistent connections)
-        int messagePort = 7001;
-        MessageBroadcaster messageBroadcaster = new MessageBroadcaster(messagePort, requestServer);
-
-        // Register the broadcaster with the request server so it can broadcast messages
-        requestServer.setMessageBroadcaster(messageBroadcaster);
-
-        // Shutdown hook
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("\n========== Shutting down servers ==========");
-            requestServer.stop();
-            messageBroadcaster.stop();
-            System.out.println("Servers stopped successfully");
-        }));
-
-        // Start servers
-        requestServer.start();
-        messageBroadcaster.start();
-
-        System.out.println("\n========== Servers Started ==========");
-        System.out.println("Request Server: localhost:" + requestPort);
-        System.out.println("Message Broadcaster: localhost:" + messagePort);
-        System.out.println("=====================================");
-        System.out.println("Server is running. Press Ctrl+C to stop.\n");
+        AppServer.initialize(7000,7001);
+        Gson gson = new Gson();
+        AppServer.getRequestServer().addController(
+                authController, requestJson->gson.fromJson(requestJson, RequestDto.class),
+                responseObj-> gson.toJson(responseObj)
+        );
+        AppServer.getRequestServer().addController(
+                carController, requestJson->gson.fromJson(requestJson,RequestDto.class),
+                responseObj-> gson.toJson(responseObj)
+        );
+        AppServer.getRequestServer().addController(
+                maintenanceController, requestJson->gson.fromJson(requestJson,RequestDto.class),
+                responseObj-> gson.toJson(responseObj)
+        );
+AppServer.getRequestServer().start();
+AppServer.getMessageBroadcaster().start();
+AppServer.getRequestServer().broadcast("Server Iniciado");
     }
 
     /**

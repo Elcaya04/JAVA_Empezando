@@ -1,5 +1,6 @@
 package org.example.APIController;
 
+import basecontroller.IBaseController;
 import com.google.gson.Gson;
 import org.example.Domain.Dtos.Auth.UserResponseDto;
 import org.example.Domain.Dtos.RequestDto;
@@ -12,7 +13,7 @@ import org.example.DataAccess.services.CarService;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CarController {
+public class CarController implements IBaseController<ResponseDto,RequestDto> {
 
     private final CarService carService;
     private final Gson gson = new Gson();
@@ -21,6 +22,12 @@ public class CarController {
         this.carService = carService;
     }
 
+    @Override
+    public String getControllerName() {
+        return "Cars";
+    }
+
+    @Override
     public ResponseDto route(RequestDto request) {
         try {
             switch (request.getRequest()) {
